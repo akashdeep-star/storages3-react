@@ -38,22 +38,22 @@ cfnBucket.bucketEncryption = {
   ]
 };
 
-cfnBucket.addPropertyOverride('BucketPolicy', {
-  PolicyDocument: {
-    Version: "2012-10-17",
-    Statement: [
-      {
-        Sid: "EnforceEncryption",
-        Effect: "Deny",
-        Principal: "*",
-        Action: "s3:PutObject",
-        Resource: `${s3Bucket.bucketArn}/*`,
-        Condition: {
-          StringNotEquals: {
-            "s3:x-amz-server-side-encryption": "aws:kms"
-          }
-        }
-      }
-    ]
-  }
-});
+// cfnBucket.addPropertyOverride('BucketPolicy', {
+//   PolicyDocument: {
+//     Version: "2012-10-17",
+//     Statement: [
+//       {
+//         Sid: "EnforceEncryption",
+//         Effect: "Deny",
+//         Principal: "*",
+//         Action: "s3:PutObject",
+//         Resource: `${s3Bucket.bucketArn}/*`,
+//         Condition: {
+//           StringNotEquals: {
+//             "s3:x-amz-server-side-encryption": "aws:kms"
+//           }
+//         }
+//       }
+//     ]
+//   }
+// });

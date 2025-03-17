@@ -83,42 +83,42 @@ const kmsKey = new kms.Key(stack, 'S3BucketKey', {
   alias: 'alias/s3-bucket-key'
 });
 
-// Create VPC
-const vpc = new ec2.Vpc(stack, 'MyVPC', {
-  maxAzs: 2,
-  subnetConfiguration: [
-    {
-      cidrMask: 24,
-      name: 'Private',
-      subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-    }
-  ]
-});
+// // Create VPC
+// const vpc = new ec2.Vpc(stack, 'MyVPC', {
+//   maxAzs: 2,
+//   subnetConfiguration: [
+//     {
+//       cidrMask: 24,
+//       name: 'Private',
+//       subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+//     }
+//   ]
+// });
 
 // First, create the S3 Gateway Endpoint (required)
-const s3GatewayEndpoint = vpc.addGatewayEndpoint('S3GatewayEndpoint', {
-  service: ec2.GatewayVpcEndpointAwsService.S3
-});
+// const s3GatewayEndpoint = vpc.addGatewayEndpoint('S3GatewayEndpoint', {
+//   service: ec2.GatewayVpcEndpointAwsService.S3
+// });
 
 // Then, create the S3 Interface Endpoint
-const s3InterfaceEndpoint = new ec2.CfnVPCEndpoint(stack, 'S3InterfaceEndpoint', {
-  vpcId: vpc.vpcId,
-  serviceName: `com.amazonaws.${stack.region}.s3`,
-  vpcEndpointType: 'Interface',
-  privateDnsEnabled: true,
-  subnetIds: vpc.selectSubnets({
-    subnetType: ec2.SubnetType.PRIVATE_ISOLATED
-  }).subnetIds
-});
+// const s3InterfaceEndpoint = new ec2.CfnVPCEndpoint(stack, 'S3InterfaceEndpoint', {
+//   vpcId: vpc.vpcId,
+//   serviceName: `com.amazonaws.${stack.region}.s3`,
+//   vpcEndpointType: 'Interface',
+//   privateDnsEnabled: true,
+//   subnetIds: vpc.selectSubnets({
+//     subnetType: ec2.SubnetType.PRIVATE_ISOLATED
+//   }).subnetIds
+// });
 
 // Add DNS Options after creation using addPropertyOverride
-s3InterfaceEndpoint.addPropertyOverride('DnsOptions', {
-  DnsRecordIpType: "ipv4",
-  PrivateDnsOnlyForInboundResolverEndpoint: "AllResolvers"
-});
+// s3InterfaceEndpoint.addPropertyOverride('DnsOptions', {
+//   DnsRecordIpType: "ipv4",
+//   PrivateDnsOnlyForInboundResolverEndpoint: "AllResolvers"
+// });
 
 // Ensure the Gateway endpoint is created first
-s3InterfaceEndpoint.addDependsOn(s3GatewayEndpoint.node.defaultChild as ec2.CfnVPCEndpoint);
+// s3InterfaceEndpoint.addDependsOn(s3GatewayEndpoint.node.defaultChild as ec2.CfnVPCEndpoint);
 
 // Get the L1 construct for the bucket
 const cfnBucket = s3Bucket.node.defaultChild as s3.CfnBucket;
@@ -137,10 +137,10 @@ cfnBucket.bucketEncryption = {
 };
 
 // Create outputs using Fn.select for DNS entries
-new CfnOutput(stack, 'S3InterfaceEndpointDNS', {
-  value: Fn.select(0, s3InterfaceEndpoint.attrDnsEntries),
-  description: 'S3 Interface Endpoint DNS'
-});
+// new CfnOutput(stack, 'S3InterfaceEndpointDNS', {
+//   value: Fn.select(0, s3InterfaceEndpoint.attrDnsEntries),
+//   description: 'S3 Interface Endpoint DNS'
+// });
 
 new CfnOutput(stack, 'S3BucketName', {
   value: s3Bucket.bucketName,
@@ -153,8 +153,8 @@ new CfnOutput(stack, 'S3BucketRegion', {
 });
 
 // Export the endpoints and KMS key ARN for reference
-export const gatewayEndpointId = s3GatewayEndpoint.vpcEndpointId;
-export const interfaceEndpointId = s3InterfaceEndpoint.ref;
+// export const gatewayEndpointId = s3GatewayEndpoint.vpcEndpointId;
+// export const interfaceEndpointId = s3InterfaceEndpoint.ref;
 export const kmsKeyArn = kmsKey.keyArn;
 export const bucketName = s3Bucket.bucketName;
 export const region = stack.region;

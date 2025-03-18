@@ -23,7 +23,7 @@ Amplify.configure(config);
 export const { StorageBrowser } = createStorageBrowser({
 	config: {
 		...createAmplifyAuthAdapter(),
-		customEndpoint: 'https://bucket.vpce-0d645cb58afb1131f-2o7g1hwv.s3.us-east-1.vpce.amazonaws.com'
+		customEndpoint: 'https://vpce-0d645cb58afb1131f-2o7g1hwv.s3.us-east-1.vpce.amazonaws.com'
 	}
 })
 

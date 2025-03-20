@@ -38,12 +38,12 @@ export const { StorageBrowser } = createStorageBrowser({
               result: (async () => {
                 const { credentials } = await fetchAuthSession();
                 const s3Client = new S3Client({
+				  requestChecksumCalculation: "WHEN_REQUIRED",
                   credentials: credentials,
-                  region: "eu-west-1",
+                  region: config.storage.aws_region,
                 });
                 const command = new PutObjectCommand({
-                  Bucket:
-                    "amplify-d7avcxipkzn8r-main-bran-mys3bucketad696188-2vjhwylmajav",
+                  Bucket:config.storage.bucket_name,
                   Key: data.key,
                   Body: data.file,
                   ServerSideEncryption: "aws:kms",
@@ -107,28 +107,3 @@ export const { StorageBrowser } = createStorageBrowser({
       ...createAmplifyAuthAdapter(),
     },
   });
-// const { StorageBrowser } = createStorageBrowser({
-//   actions: {
-//     default: {
-//       upload: {
-//         ...defaultActionConfigs.upload,
-//         handler: ({ config, data, options }) =>
-//           defaultActionConfigs.upload.handler({
-//             config,
-//             data,
-//             options: {
-//               ...options,
-//               onSuccess: (...input) => {
-//                 options?.onSuccess?.(...input);
-//                 fileUploadCounter.add(1); // Your custom counter metrics.
-//               },
-//               onError: (data, message, error) => {
-//                 options?.onError?.(data, message, error);
-//                 fileUploadError.recordError(error); // Your custom error metrics.
-//               },
-//             },
-//           }),
-//       }
-//     }
-//   }
-// });
